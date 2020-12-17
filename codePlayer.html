@@ -1,0 +1,227 @@
+<html>
+    
+    <head>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        
+        <style type="text/css">
+            
+            body {
+                
+                margin: 0;
+                padding: 0;
+                
+            }
+            
+            #navbar{                
+             
+                background-color: #EEEDEF;
+                font-family: Helvetica, sans-serif;
+                padding: 5px;
+                height: 30px;
+                margin-bottom: 0;
+            
+            }
+            
+            #navbar h1{
+                
+                float: left;                
+                margin-top: 5px; 
+                font-size: 19.2px;
+                font-weight: bold;
+                            
+            }
+                     
+            #buttons{
+                
+                width: 275px;
+                margin: 0 auto;
+                position: relative;
+                top: 0px;
+                
+            }
+            
+            .toggleButton{
+                
+                float: left;
+                border: 1px solid black;
+                padding: 6px;
+                
+            }
+            
+            .highlighted {
+                
+                background-color: #808080 !important;
+                
+            }
+            
+            .active {
+                
+                background-color: #E8F2FF;
+                
+            }
+            
+            #html {
+                
+                border-top-left-radius: 4px;
+                border-bottom-left-radius: 4px;
+                
+            }
+            
+          
+            
+            #output {
+             
+                border-top-right-radius: 4px;
+                border-bottom-right-radius: 4px;
+                
+            }
+            
+            .clear{
+                
+                display: block;
+                clear: both;
+                margin: 0;
+                
+            }
+            
+            .panel {
+                
+                display: inline;
+                margin-top: -5px;
+                padding: 0;
+                height: 900px;
+                width: 49%;
+                float: left;
+                display: none;
+                
+            }
+            
+            textarea{
+                
+                resize: none;
+                border-left: none;
+                border-top: none;
+                
+            }
+          
+            #htmlPanel{
+                
+                display: block;
+            }
+            
+            iframe{
+                
+                display: block;
+                border: none;               
+                
+            }
+            
+            #outputPanel{
+                
+                display: block;
+            }
+            
+            
+            
+          
+        
+        </style>
+                
+        <title>CodePlayer</title>
+    
+    </head>
+
+    <body>
+             
+        <div id="navbar">
+            
+            <h1>CodePlayer</h1>            
+            <div id="buttons">
+
+                <div class ="toggleButton active" id ="html">HTML</div>
+                <div class ="toggleButton" id ="css">CSS</div>
+                <div class ="toggleButton" id ="javascript">JavaScript</div>
+                <div class ="toggleButton active" id ="output">Output</div>
+                
+            </div>
+        
+        </div>
+        
+        <div class = "clear"></div>
+        
+        <div id ="mainArea">
+            
+            <textarea id="htmlPanel" class="panel"><h1>Hello World!</h1><p id="paragraph"></p></textarea>
+            
+            <textarea id="cssPanel" class="panel">h1{color: red;}</textarea>
+
+            <textarea id="javascriptPanel" class="panel">document.getElementById("paragraph").innerHTML = "Test";</textarea>
+            
+            <iframe id="outputPanel" class="panel"></iframe>
+        
+        
+        </div>
+        
+        <script type="text/javascript">
+            
+            function updateContent() {
+                
+                $("iframe").contents().find("html").html("<html><head><style>" + $("#cssPanel").val() + "</style></head><body>" + $("#htmlPanel").val() + "</body></html>");
+                document.getElementById("outputPanel").contentWindow.eval($("#javascriptPanel").val());            
+            };
+            
+            updateContent();
+            
+            var panelsOpen = 2;        
+        
+            $(".toggleButton").hover(
+              
+                function(){
+                                
+                    $(this).addClass("highlighted");
+                
+            }, function(){
+                
+                    $(this).removeClass("highlighted");
+                
+            });
+            
+            $(".toggleButton").click(
+            
+                function(){
+                    
+                    $(this).toggleClass("active");
+                    
+                    $(this).removeClass("highlighted");
+                    
+                    var panelId = $(this).attr("id") + "Panel";
+                    
+                    if($("#" + panelId).css("display") == "none"){
+
+                        $("#" + panelId).show();
+                        panelsOpen += 1;
+
+                    } else {
+                        
+                        $("#" + panelId).hide();
+                        panelsOpen -= 1;
+                    }
+                    
+                    $(".panel").width(($(window).width() / panelsOpen) -10);                     
+            
+                }
+            );            
+            
+            
+            $("textarea").on("change keyup paste", function(){
+                
+               updateContent();
+                
+            });
+        
+        </script>
+        
+    </body>
+
+</html>
